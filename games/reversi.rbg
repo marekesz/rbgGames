@@ -58,16 +58,16 @@
 
 #turn(me; mePawn; opp; oppPawn) = (
     ->me (
-        (anySquare {oppPawn} anyNeighborSquare {e} {? movePossible(mePawn; oppPawn)})
+        (anySquare {e} {? movePossible(mePawn; oppPawn)})
         ->>
         swapDirections(mePawn; oppPawn)
         [mePawn]
-      + {! anySquare {oppPawn} anyNeighborSquare {e} {? movePossible(mePawn; oppPawn)}}
+      + {! anySquare {e} {? movePossible(mePawn; oppPawn)}}
         ->>
     )
     (
-        {? anySquare ({oppPawn} anyNeighborSquare {e} movePossible(mePawn; oppPawn) + {mePawn} anyNeighborSquare {e} movePossible(oppPawn; mePawn))}
-      + {! anySquare ({oppPawn} anyNeighborSquare {e} movePossible(mePawn; oppPawn) + {mePawn} anyNeighborSquare {e} movePossible(oppPawn; mePawn))}
+        {? anySquare {e} (movePossible(mePawn; oppPawn) + movePossible(oppPawn; mePawn))}
+      + {! anySquare {e} (movePossible(mePawn; oppPawn) + movePossible(oppPawn; mePawn))}
         ->> setScores ->> {}
     )
   )
