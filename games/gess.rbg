@@ -1,0 +1,117 @@
+// Gess
+// -- The game ends with a draw after 1000 turns.
+
+#players = black(100), white(100)
+#variables = turn(999), t(1), tul(1), tu(1), tur(1), tl(1), tr(1), tdl(1), td(1), tdr(1)
+#allPieces = e,b,w,flagE,flagP
+#pieces = allPieces
+#board = rectangle(up,down,left,right,
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,w,e,w,e,w,w,w,w,w,w,w,w,e,w,e,w,e,e,e]
+         [e,e,w,w,w,e,w,e,w,w,w,w,e,w,e,w,e,w,w,w,e,e]
+         [e,e,e,w,e,w,e,w,w,w,w,w,w,w,w,e,w,e,w,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,w,e,e,w,e,e,w,e,e,w,e,e,w,e,e,w,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,b,e,e,b,e,e,b,e,e,b,e,e,b,e,e,b,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,b,e,b,e,b,b,b,b,b,b,b,b,e,b,e,b,e,e,e]
+         [e,e,b,b,b,e,b,e,b,b,b,b,e,b,e,b,e,b,b,b,e,e]
+         [e,e,e,b,e,b,e,b,b,b,b,b,b,b,b,e,b,e,b,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e]
+         [e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e])
+
+#anySquare = ((left* + right*)(up* + down*))
+#anyNeighborSquare = (up + up (left + right) + left + right + down + down (left + right))
+#isInside = ({? left^2} {? up^2} {? right^2} {? down^2})
+#isInner = ({? left^3} {? up^3} {? right^3} {? down^3})
+
+#isRing(p) = (
+    up {p} right {p} down {p} down {p}
+    left {p} left {p} up {p} up {p} right down {e}
+  )
+
+#lostCheck(me; opp; p) = (
+      {? anySquare isInner isRing(p)}
+    + {! anySquare isInner isRing(p)} ->> [$ me=0,opp=100] ->> {}
+  )
+
+#grabRing(p) = (
+    up ({e,flagE} [$tu=0] + {p,flagP} [$tu=1] ({p}[e]+{flagP}))
+    right ({e,flagE} [$tur=0] + {p,flagP} [$tur=1] ({p}[e]+{flagP}))
+    down ({e,flagE} [$tr=0] + {p,flagP} [$tr=1] ({p}[e]+{flagP}))
+    down ({e,flagE} [$tdr=0] + {p,flagP} [$tdr=1] ({p}[e]+{flagP}))
+    left ({e,flagE} [$td=0] + {p,flagP} [$td=1] ({p}[e]+{flagP}))
+    left ({e,flagE} [$tdl=0] + {p,flagP} [$tdl=1] ({p}[e]+{flagP}))
+    up ({e,flagE} [$tl=0] + {p,flagP} [$tl=1] ({p}[e]+{flagP}))
+    up ({e,flagE} [$tul=0] + {p,flagP} [$tul=1] ({p}[e]+{flagP}))
+    right down
+  )
+
+#dropRing(p) = (
+    (up left isInside ({$tul==1} [p] + {$tul==0} [e]) down right + {!up left isInside})
+    (up isInside ({$tu==1} [p] + {$tu==0} [e]) down + {!up isInside})
+    (up right isInside ({$tur==1} [p] + {$tur==0} [e]) down left + {!up right isInside})
+    (left isInside ({$tl==1} [p] + {$tl==0} [e]) right + {!left isInside})
+    (right isInside ({$tr==1} [p] + {$tr==0} [e]) left + {!right isInside})
+    (down left isInside ({$tdl==1} [p] + {$tdl==0} [e]) up right + {!down left isInside})
+    (down isInside ({$td==1} [p] + {$td==0} [e]) up + {!down isInside})
+    (down right isInside ({$tdr==1} [p] + {$tdr==0} [e]) up left + {!down right isInside})
+  )
+
+#isEmptyRing = {? up {e} right {e} down {e} down {e} left {e} left {e} up {e} up {e}}
+
+#moveDirThree(p; dir; oppDir; isAreaEmpty) = (
+    dir
+    ({allPieces} + isAreaEmpty dir isInside ({allPieces} + isAreaEmpty dir isInside))
+  )
+
+#moveDirAny(p; dir; oppDir; isAreaEmpty) = (
+    dir
+    (isAreaEmpty dir isInside)*
+  )
+
+#moveDir(p; dir; oppDir; isAreaEmpty) = (
+    oppDir {? up {e,p} right {e,p} down {e,p} down {e,p} left {e,p} left {e,p} up {e,p} up {e,p}}
+    (
+        {e} [flagE] moveDirThree(p; dir; oppDir; isAreaEmpty) ->> [$t=0]
+      + {p} [flagE] moveDirAny(p; dir; oppDir; isAreaEmpty) ->> [$t=1]
+    )
+    ({!{p}} [flagE] + {p} [flagP])
+    oppDir oppDir* {flagE}
+    [e] grabRing(p)
+    dir* {flagE,flagP}
+  )
+
+#move(p) = (
+    anySquare isInside {p}
+    (
+        moveDir(p; (up left); (down right); {? down left {e} up {e} up {e} right {e} right {e}} )
+      + moveDir(p; up; down; {? up left {e} right {e} right {e}} )
+      + moveDir(p; (up right); (down left); {? up left {e} right {e} right {e} down {e} down {e}} )
+      + moveDir(p; left; right; {? down left {e} up {e} up {e}} )
+      + moveDir(p; right; left; {? up right {e} down {e} down {e}} )
+      + moveDir(p; (down left); (up right); {? down right {e} left {e} left {e} up {e} up {e}} )
+      + moveDir(p; down; up; {? right down {e} left {e} left {e}} )
+      + moveDir(p; (down right); (up left); {? up right {e} down {e} down {e} left {e} left {e}} )
+    )
+    ({$t==0} [e] + {$t==1} [p])
+    dropRing(p)
+  )
+
+#turn(me; opp; p) = (
+    ->me move(p)
+    lostCheck(me; opp; p)
+    lostCheck(opp; me; p)
+    [$ turn = turn + 1]
+  )
+
+#rules = [$ black=50,white=50] (turn(black; white; b) turn(white; black; w))*
