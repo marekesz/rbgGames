@@ -1,4 +1,4 @@
-// Othello (reversi)
+// Reversi (Othello)
 
 #players = white(100), black(100)
 #pieces = e, w, b
@@ -14,7 +14,6 @@
          [e,e,e,e,e,e,e,e])
 
 #anySquare = ((up* + down*)(left* + right*))
-#anyNeighborSquare = (up + down + left + right + (up + down)(left + right))
 
 #swapDirectionPossible(mePawn; oppPawn; dir) = (
     dir {oppPawn} dir
