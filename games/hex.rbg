@@ -26,8 +26,8 @@
                     [ e , e ]
                       [ e ])
 
+#anySquare = ((NW* + SE*)(SW* + NE*))
 #anyNeighbor = (NW + NE + E + SE + SW + W)
-#anySquare = anyNeighbor*
 
 #reachable(dir; piece) = ((anyNeighbor {piece})* {! dir})
 

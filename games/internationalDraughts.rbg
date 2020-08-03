@@ -19,7 +19,9 @@
          [        ,        ,        ,whiteMan,whiteMan,whiteMan,        ,        ,        ]
          [        ,        ,        ,        ,whiteMan,        ,        ,        ,        ])
 
-#anySquare = ((upRight + downLeft + upLeft + downRight)*)
+#anyRect = (upRight* + downLeft*)(upLeft* + downRight*)
+#gotoCenter = anyRect {? upRight^4 downLeft^7}
+#anySquare = (gotoCenter anyRect)
 
 #grabPiece(piece) = {piece} [empty]
 #dropMan(temporaryPiece; me; forward) = {temporaryPiece} ({? forward~Left + forward~Right} [me~Man] + {! forward~Left + forward~Right} [me~King])

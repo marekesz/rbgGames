@@ -14,8 +14,7 @@
             [ e , e , e , e , e , e ]
               [ e , e , e , e , e ])
 
-#anyNeighbor = (NW + NE + E + SE + SW + W)
-#anySquare = anyNeighbor*
+#anySquare = ((NW* + SE*)(SW* + NE*) {? W^4 E^8} (W* + E*)(NE* + SE*))
 
 #lineAt(piece; shift1; shift2; count) = (
     (shift1 {piece})*
