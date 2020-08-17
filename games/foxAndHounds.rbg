@@ -16,10 +16,13 @@
          [ , ,e,e,h, , ]
          [ , , ,h, , , ])
 
-#anySquare = ((upRight + downLeft + upLeft + downRight)*)
+#anyRect = (upRight* + downLeft*)(upLeft* + downRight*)
+#gotoCenter = anyRect {? upRight^3 downLeft^4}
+#anySquare = (gotoCenter anyRect)
 
 #foxTurn(forward) = (
-    ->foxPlayer anySquare {f} [e] (upRight + downLeft + upLeft + downRight) {e}
+    ->> anySquare {f} [e]
+    ->foxPlayer (upRight + downLeft + upLeft + downRight) {e}
     ->> [f] [$ foxPlayer = 100, houndPlayer = 0]
     (   {? forward~Left + forward~Right}
       + {! forward~Left + forward~Right} ->> {})
