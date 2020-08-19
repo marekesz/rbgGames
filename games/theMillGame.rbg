@@ -38,7 +38,8 @@
 
 
 #anyNeighbor = (up+down+left+right)
-#anySquare = anyNeighbor*
+#anySquare = (left* {!left} up* {!up} left* (left + right) (up* + down*)
+    (right + right down + right down^2 + right down^2 left + left + left down + left down^2 + left right))
 
 #isPartOfDirectedMill(color;direction1;direction2) = (
         direction1 {color~Piece} (direction1 + direction2^2) {color~Piece}
