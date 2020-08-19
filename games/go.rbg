@@ -1,6 +1,7 @@
 // Go (19x19)
 // -- Area scoring.
 // -- No ko rule.
+// -- Suicide prohibition.
 // -- 722 turn limit.
 
 #players = black(361), white(361)
@@ -12,7 +13,7 @@
          boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine boardLine)
 
 #anySquare = (left* + right*)(up* + down*)
-#resetSquare = (left* {! left} up*  {! up})
+#resetSquare = (left* {! left} up* {! up})
 #gotoNeighbor(neighbor) = ((up+down+left+right){neighbor})
 #gotoBlockNeighbor(stone; neighbor) = (gotoNeighbor(stone)* gotoNeighbor(neighbor))
 #blockHasLiberty(stone) = {? gotoBlockNeighbor(stone; empty)}
@@ -24,7 +25,7 @@
       [stone]
       (
           blockHasLiberty(stone)
-        + {? gotoNeighbor(stone) blockHasNoLiberty(oppStone)}
+        + {? gotoNeighbor(oppStone) blockHasNoLiberty(oppStone)}
       )
     )
 
@@ -95,7 +96,7 @@
 #endGameCheck = (
       {$ blackPass + whitePass < 2}
       [$ turn = turn+1]
-    + ( {$ blackPass + whitePass == 2} + {$ turn == 721})
+    + ( {$ blackPass + whitePass == 2} + {$ turn == 721}) ->>
       countPoints resetSquare ->> {}
     )
 
