@@ -137,7 +137,7 @@
     ->color move(forward; backward; color; oppColor)
     ->>
     (
-        {$ oppColor~King > 0} [$ stagnation=stagnation+1]
+        {$ oppColor~King > 0}
       + {$ oppColor~King == 0} [$ color=100,oppColor=0] ->> {}
     )
   )
