@@ -1,9 +1,9 @@
 // The Mill Game (Nine men's morris)
-// -- The play ends with a draw after 50 moves without forming a mill.
+// -- The play ends with a draw after 20 moves without forming a mill.
 
 #pieces = empty, whitePiece, blackPiece
 #players = white(100), black(100)
-#variables = stagnation(50)
+#variables = stagnation(20)
 
 #circleSegment(
     v;id1;id2;id3;previousOnCircle;
@@ -92,8 +92,8 @@
 
 #endTurn(color;opponentColor) =
     (
-        {$ stagnation < 50}
-      + {$ stagnation == 50} [$ color=50, opponentColor=50] ->> {}
+        {$ stagnation < 20}
+      + {$ stagnation == 20} [$ color=50, opponentColor=50] ->> {}
     )
     [$ color=100, opponentColor=0]
     (
