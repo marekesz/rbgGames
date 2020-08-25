@@ -1,9 +1,9 @@
 // The Mill Game (Nine men's morris)
-// -- The play ends with a draw after 20 moves without forming a mill.
+// -- The play ends with a draw after 20 moves without forming a mill after the first phase.
 
 #pieces = empty, whitePiece, blackPiece
 #players = white(100), black(100)
-#variables = stagnation(20)
+#variables = stagnation(20), firstPhase(9)
 
 #circleSegment(
     v;id1;id2;id3;previousOnCircle;
@@ -71,7 +71,6 @@
     ->color anySquare {empty} [color~Piece]
 
 #firstPhaseTurn(color;opponentColor) =
-    [$ stagnation = stagnation + 1]
     (
         {? pieceOutOfMill(opponentColor)}
         putPiece(color)
@@ -115,9 +114,11 @@
 
 #rules = [$ black=100, white=0]
     (
+        [$ firstPhase = firstPhase + 1]
         firstPhaseTurn(white;black)
         firstPhaseTurn(black;white)
-    )^9
+    )*
+    {$ firstPhase == 9} ->>
     (
         secondPhaseTurn(white;black)
         secondPhaseTurn(black;white)
