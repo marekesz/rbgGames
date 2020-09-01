@@ -1,0 +1,61 @@
+// Breakthru
+// -- The play is limited to 200 turns, one turn for both players, not counting the initial setup.
+
+#players = gold(100), silver(100)
+#pieces = e, g, gf, s
+#variables = turn(99)
+#board = rectangle(up,down,left,right,
+         [e, e, e, e, e, e, e, e, e, e, e]
+         [e, e, e, s, s, s, s, s, e, e, e]
+         [e, e, e, e, e, e, e, e, e, e, e]
+         [e, s, e, e, e, e, e, e, e, s, e]
+         [e, s, e, e, e, e, e, e, e, s, e]
+         [e, s, e, e, e,gf, e, e, e, s, e]
+         [e, s, e, e, e, e, e, e, e, s, e]
+         [e, s, e, e, e, e, e, e, e, s, e]
+         [e, e, e, e, e, e, e, e, e, e, e]
+         [e, e, e, s, s, s, s, s, e, e, e]
+         [e, e, e, e, e, e, e, e, e, e, e])
+
+#anySquare = ((up* + down*)(left* + right*))
+#oneDiagonal = ((up + down)(left + right))
+#parallelLine = (
+        up {e} (up {e})*
+      + down {e} (down {e})*
+      + right {e} (right {e})*
+      + left {e} (left {e})*
+    )
+#isEdge = {! up down^2 left right^2}
+
+#goldSetup = (
+      ( 
+        {$ g < 12}
+        ->gold anySquare {? up^3 down^6 left^3 right^6} {e} ->> [g]
+      )* {$ g == 12}
+    )
+
+#goldTurn = (
+    ->gold
+         anySquare (
+             ({g} [e] parallelLine ->gold [g]) (anySquare {g} [e] parallelLine ->> [g])
+           + {g} [e] oneDiagonal {s} ->> [g]
+           + {gf} [e] (parallelLine + oneDiagonal {s}) ->> (
+                 isEdge [$ gold=100, silver=0] ->> {}
+               + {! isEdge} [gf]
+             )
+         )
+    )
+
+#silverTurn = (
+    ->silver
+         anySquare  (
+             ({s} [e] parallelLine ->silver [s]) (anySquare {s} [e] parallelLine ->> [s])
+           + {s} [e] oneDiagonal (
+               {g} ->> [s]
+             + {gf} ->> [$ gold=0, silver=100] ->> {}
+           )
+         )
+    )
+
+#rules = [$ gold=50, silver=50] goldSetup
+    (goldTurn silverTurn [$ turn = turn + 1])*
