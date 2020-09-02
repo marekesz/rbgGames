@@ -4,7 +4,7 @@ parser=../rbgParser/bin/rbgParser
 
 # Usage:
 # regenerate ["options for parser"] [source_directory] [suffix]
-# regenerate "-fnoop-before-alternative -fnoop-before-modifier" ../../rbgGames/games splitModPlus
+# regenerate "-fnoop-before-modifier -fnoop-before-alternative" games splitModPlus
 function regenerate {
   echo "Parser arguments: $1"
   mkdir "$2/split"
