@@ -1,6 +1,6 @@
 // Reversi (Othello)
 
-#players = white(100), black(100)
+#players = black(100), white(100)
 #pieces = e, w, b
 #variables =
 #board = rectangle(up,down,left,right,
