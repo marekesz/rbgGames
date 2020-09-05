@@ -1,13 +1,14 @@
 #!/bin/bash
 
 parser=../rbgParser/bin/rbgParser
+games=games
 
 # Usage:
 # regenerate ["options for parser"] [source_directory] [suffix]
 # regenerate "-fnoop-before-modifier -fnoop-before-alternative" games splitModPlus
 function regenerate {
   echo "Parser arguments: $1"
-  mkdir "$2/split"
+  mkdir "${games}/split"
   for gamefile in $2/*.rbg; do
     outfile="$2/split/$(basename "$gamefile" .rbg)_$3.rbg"
     echo "$gamefile -> $outfile"
@@ -19,11 +20,12 @@ function regenerate {
   done
 }
 
-regenerate "-fnoop-before-modifier -fnoop-before-alternative -fnoop-after-star" games splitModPlusStarChunk
-regenerate "-fnoop-before-modifier -fnoop-before-alternative -fnoop-before-star" games splitModPlusStar
-regenerate "-fnoop-before-modifier -fnoop-before-alternative" games splitModPlus
-regenerate "-fnoop-before-modifier" games splitMod
-regenerate "-fnoop-after-modifier -fnoop-before-alternative -fnoop-after-star" games splitAmodPlusStarChunk
-regenerate "-fnoop-after-modifier -fnoop-before-alternative -fnoop-before-star" games splitAmodPlusStar
-regenerate "-fnoop-after-modifier -fnoop-before-alternative" games splitAmodPlus
-regenerate "-fnoop-after-modifier" games splitAmod
+rm -r ${games}/split
+regenerate "-fnoop-before-modifier -fnoop-before-alternative -fnoop-after-star" ${games} splitModPlusStarChunk
+regenerate "-fnoop-before-modifier -fnoop-before-alternative -fnoop-before-star" ${games} splitModPlusStar
+regenerate "-fnoop-before-modifier -fnoop-before-alternative" ${games} splitModPlus
+regenerate "-fnoop-before-modifier" ${games} splitMod
+#regenerate "-fnoop-after-modifier -fnoop-before-alternative -fnoop-after-star" ${games} splitAmodPlusStarChunk
+#regenerate "-fnoop-after-modifier -fnoop-before-alternative -fnoop-before-star" ${games} splitAmodPlusStar
+#regenerate "-fnoop-after-modifier -fnoop-before-alternative" ${games} splitAmodPlus
+#regenerate "-fnoop-after-modifier" ${games} splitAmod
