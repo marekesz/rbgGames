@@ -60,8 +60,8 @@
 
 #turn(me; opp; piece) = (
       ->me anySquare {e}
-      [piece] winCheckAt(me; opp; piece)
-      . anySquare {? onAMiddleSquare}
+      . [piece] winCheckAt(me; opp; piece)
+      anySquare {? onAMiddleSquare}
       (->> rotateClockwise + ->> rotateCounterclockwise)
       winCheckGlobal
     )
