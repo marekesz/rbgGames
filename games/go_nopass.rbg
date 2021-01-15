@@ -24,10 +24,10 @@
       anySquare
       {empty}
       [stone]
-      (
+      {?
           blockHasLiberty(stone)
-        + {? gotoNeighbor(oppStone) blockHasNoLiberty(oppStone)}
-      )
+        + gotoNeighbor(oppStone) blockHasNoLiberty(oppStone)
+      }
     )
 
 #markNeighborToCapture(oppStone; dir; oppDir) = (
