@@ -70,8 +70,9 @@
 #isEmptyRing = {? up {e} right {e} down {e} down {e} left {e} left {e} up {e} up {e}}
 
 #moveDirThree(p; dir; oppDir; isAreaEmpty) = (
-    dir
-    ({allPieces} + isAreaEmpty dir isInside ({allPieces} + isAreaEmpty dir isInside))
+      dir
+    + dir isAreaEmpty dir isInside
+    + dir isAreaEmpty dir isInside isAreaEmpty dir isInside
   )
 
 #moveDirAny(p; dir; oppDir; isAreaEmpty) = (
