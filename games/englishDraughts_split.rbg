@@ -17,7 +17,7 @@
          [        ,        ,        ,whiteMan,        ,        ,        ])
 
 #anyRect = (upRight* + downLeft*)(upLeft* + downRight*)
-#gotoCenter = anyRect {? upRight^4 downLeft^7}
+#gotoCenter = anyRect (upRight^4 downLeft^7 upRight^3)
 #anySquare = (gotoCenter anyRect)
 
 #grabPiece(piece) = {piece}[empty]

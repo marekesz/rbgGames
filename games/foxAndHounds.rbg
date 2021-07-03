@@ -17,7 +17,7 @@
          [ , , ,h, , , ])
 
 #anyRect = (upRight* + downLeft*)(upLeft* + downRight*)
-#gotoCenter = anyRect {? upRight^3 downLeft^7}
+#gotoCenter = anyRect upRight^3 downLeft^7 upRight^4
 #anySquare = (gotoCenter anyRect)
 
 #foxTurn(forward) = (
