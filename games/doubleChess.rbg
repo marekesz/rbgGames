@@ -1,5 +1,5 @@
 // Double chess
-// -- The hundren-move rule: the game ends in a draw after 100 moves without moving a pawn or capturing.
+// -- The hundren-move rule: the game ends in a draw after 100 moves (200 half-moves) without moving a pawn or capturing.
 // -- No rules about repeating states.
 
 #anyRook(color) = color~RookMoved, color~RookUnmoved
@@ -160,11 +160,11 @@
     ->color move(forward; backward; color; oppColor)
     ->>
     (
-        {$ stagnation < 100} ->> (
+        {$ stagnation < 200} ->> (
             {! checked(oppColor; color; backward; forward)} [$ color=50,oppColor=50] // Draw if stalemate (no further legal move)
           + {? checked(oppColor; color; backward; forward)} [$ color=100,oppColor=0] // Win if checkmate (no further legal move)
         )
-      + {$ stagnation == 100} [$ color=50,oppColor=50] ->> (
+      + {$ stagnation == 200} [$ color=50,oppColor=50] ->> (
             {! checked(oppColor; color; backward; forward)} ->> {} // Draw if not checked
           + {? checked(oppColor; color; backward; forward)}
             {! move(forward; backward; color; oppColor)}

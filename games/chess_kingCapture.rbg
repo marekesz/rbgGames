@@ -1,6 +1,6 @@
 // Chess with king capture
 // -- Check is ignored in all cases and the game ends with capturing the king.
-// -- The fifty-move rule: the game ends in a draw after 50 moves without moving a pawn or capturing.
+// -- The fifty-move rule: the game ends in a draw after 50 moves (100 half-moves) without moving a pawn or capturing.
 
 #anyRook(color) = color~RookMoved, color~RookUnmoved
 #majorPieces(color) = color~RookMoved, color~Knight, color~Bishop, color~Queen
@@ -8,7 +8,7 @@
 
 #players = white(100), black(100)
 #pieces = singleColorPieces(white), singleColorPieces(black), empty
-#variables = pawnDoubleMove(1), whiteKingMoved(1), blackKingMoved(1), stagnation(50)
+#variables = pawnDoubleMove(1), whiteKingMoved(1), blackKingMoved(1), stagnation(100)
 
 #board = rectangle(up,down,left,right,
          [blackRookUnmoved, blackKnight, blackBishop, blackQueen, blackKing, blackBishop, blackKnight, blackRookUnmoved]

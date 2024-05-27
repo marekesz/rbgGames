@@ -1,5 +1,5 @@
 // Chess
-// -- The fifty-move rule: the game ends in a draw after 50 moves without moving a pawn or capturing.
+// -- The fifty-move rule: the game ends in a draw after 50 moves (100 half-moves) without moving a pawn or capturing.
 // -- No rules about repeating states.
 
 #anyRook(color) = color~RookMoved, color~RookUnmoved
@@ -8,7 +8,7 @@
 
 #players = white(100), black(100)
 #pieces = singleColorPieces(white), singleColorPieces(black), empty
-#variables = pawnDoubleMove(1), whiteKingMoved(1), blackKingMoved(1), stagnation(50)
+#variables = pawnDoubleMove(1), whiteKingMoved(1), blackKingMoved(1), stagnation(100)
 
 #board = rectangle(up,down,left,right,
          [blackRookUnmoved, blackKnight, blackBishop, blackQueen, blackKing, blackBishop, blackKnight, blackRookUnmoved]
@@ -155,11 +155,11 @@
     ->color move(forward; backward; color; oppColor)
     ->>
     (
-        {$ stagnation < 50} ->> (
+        {$ stagnation < 100} ->> (
             {! checked(oppColor; color; backward; forward)} [$ color=50,oppColor=50] // Draw if stalemate (no further legal move)
           + {? checked(oppColor; color; backward; forward)} [$ color=100,oppColor=0] // Win if checkmate (no further legal move)
         )
-      + {$ stagnation == 50} [$ color=50,oppColor=50] ->> (
+      + {$ stagnation == 100} [$ color=50,oppColor=50] ->> (
             {! checked(oppColor; color; backward; forward)} ->> {} // Draw if not checked
           + {? checked(oppColor; color; backward; forward)}
             {! move(forward; backward; color; oppColor)}
