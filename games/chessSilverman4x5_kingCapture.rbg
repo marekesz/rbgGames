@@ -1,0 +1,104 @@
+// Silverman 4x5 chess with king capture
+// -- No castling, en-passant, nor pawn double move.
+// -- Promotion only to Queens and Rooks.
+// -- Check is ignored in all cases and the game ends with capturing the king.
+// -- The game ends in a draw after 20 moves (40 half-moves) without moving a pawn or capturing.
+
+#majorPieces(color) = color~Rook, color~Queen
+#singleColorPieces(color) = color~Pawn, color~King, color~Rook, color~Queen
+
+#players = white(100), black(100)
+#pieces = singleColorPieces(white), singleColorPieces(black), empty
+#variables = stagnation(40)
+
+#board = rectangle(up,down,left,right,
+         [blackRook, blackQueen, blackKing, blackRook]
+         [blackPawn, blackPawn , blackPawn, blackPawn]
+         [empty    , empty     , empty    , empty    ]
+         [whitePawn, whitePawn , whitePawn, whitePawn]
+         [whiteRook, whiteQueen, whiteKing, whiteRook])
+
+#anySquare = (left* + right*)(up* + down*)
+#anyNeighborSquare = (left + right + up + down + (left + right)(up + down))
+
+#diagonalLine = (
+        (up left {empty})* up left
+      + (up right {empty})* up right
+      + (down left {empty})* down left
+      + (down right {empty})* down right
+    )
+
+#parallelLine = (
+        (up {empty})* up
+      + (down {empty})* down
+      + (right {empty})* right
+      + (left {empty})* left
+    )
+
+#captureAnyBy(capturingPiece; oppColor) = (
+      {empty}
+    + {singleColorPieces(oppColor)} [$ stagnation=0]
+  ) [capturingPiece]
+
+#pickUpPiece(piece) = {piece}[empty]
+
+#standardMove(piece; movePattern; oppColor) =
+    pickUpPiece(piece)
+    movePattern
+    captureAnyBy(piece; oppColor)
+
+#queenMove(color; oppColor) = standardMove(color~Queen; (diagonalLine + parallelLine); oppColor)
+
+#rookMove(color; oppColor) =
+    pickUpPiece(color~Rook)
+    parallelLine
+    captureAnyBy(color~Rook; oppColor)
+
+#standardKingMove(color; oppColor) =
+    anyNeighborSquare
+    captureAnyBy(color~King; oppColor)
+
+#kingMove(forward; backward; color; oppColor) =
+    pickUpPiece(color~King)
+    standardKingMove(color; oppColor)
+
+#checkForPromotion(forward; color) = (
+        {? forward} [color~Pawn]
+      + {! forward} [majorPieces(color)]
+    )
+
+#standardPawnMove(forward; backward; color; oppColor) =
+    pickUpPiece(color~Pawn)
+    (
+        (
+            forward {empty}
+          + forward (left + right) {singleColorPieces(oppColor)}
+        )
+        checkForPromotion(forward; color)
+    ) [$ stagnation=0]
+
+
+#move(forward; backward; color; oppColor) = (
+      anySquare
+      (
+          kingMove(forward; backward; color; oppColor)
+        + rookMove(color; oppColor)
+        + queenMove(color; oppColor)
+        + standardPawnMove(forward; backward; color; oppColor)
+      )
+  )
+
+#turn(forward; backward; color; oppColor) = (
+    [$ stagnation=stagnation+1]
+    ->color move(forward; backward; color; oppColor)
+    ->>
+    (
+        {$ oppColor~King > 0}
+      + {$ oppColor~King == 0} [$ color=100,oppColor=0] ->> {}
+    )
+  )
+
+#rules = [$ white=50,black=50] (
+    turn(up;down;white;black)
+    turn(down;up;black;white)
+  )*
