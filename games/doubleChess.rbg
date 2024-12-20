@@ -9,7 +9,7 @@
 
 #players = white(100), black(100)
 #pieces = singleColorPieces(white), singleColorPieces(black), empty
-#variables = pawnDoubleMove(1), stagnation(100)
+#variables = pawnDoubleMove(1), stagnation(200)
 
 #board = rectangle(up,down,left,right,
          [blackRookUnmoved, blackKnight, blackBishop, blackQueen, blackKingUnmoved, blackBishop, blackKnight, blackRookUnmoved, blackRookUnmoved, blackKnight, blackBishop, blackQueen, blackKingUnmoved, blackBishop, blackKnight, blackRookUnmoved]
